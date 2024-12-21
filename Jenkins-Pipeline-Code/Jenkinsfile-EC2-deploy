@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'feature/test', credentialsId: 'GITHUB', url: 'https://github.com/volley123/three-tier-architecture-demo.git'
+                git branch: 'feature/test', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git'
             }
         }
         stage('Deploy web app to EC2') {
