@@ -15,33 +15,41 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'feature/test', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git'
+                git branch: 'feature/test', credentialsId: 'GITHUB', url: 'https://github.com/volley123/three-tier-architecture-demo.git'
+            }
+        }
+        stage('Archive Files') {
+            steps {
+                archiveArtifacts artifacts: '**', fingerprint: true
             }
         }
         stage('Deploy web app to EC2') {
             when {
-               branch 'feature/*'
+               branch pattern: "feature/.*", comparator: "REGEXP"
             }
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ec2-creds']]) {
-
                     sshagent(['aws-dev-deploy-ec2-instance']) {
-                        sh '''                
-                            LOCAL_PATH=/Users/varshildesai/DevOps-projects/github-code/robo-stan-shop-ecommerce-three-tier-application
+                        sh '''
+                            # Define paths
+                            LOCAL_PATH=$WORKSPACE
                             REMOTE_PATH=/home/ubuntu/app
-               
-                           scp -o StrictHostKeyChecking=no -r $LOCAL_PATH/* ubuntu@13.235.244.119:$REMOTE_PATH/
-                           ssh -o StrictHostKeyChecking=no ubuntu@13.235.244.119 << EOF
-                           cd $REMOTE_PATH
 
-                           # Deploy the application using the docker-compose.yaml file
-                           docker-compose -f docker-compose.yaml pull
-                           docker-compose -f docker-compose.yaml up -d
-                        EOF
-                    '''
+                            # Transfer files to EC2 instance
+                            scp -o StrictHostKeyChecking=no -r $LOCAL_PATH/* ubuntu@13.235.244.119:$REMOTE_PATH/
+
+                            # SSH into EC2 instance
+                            ssh -o StrictHostKeyChecking=no ubuntu@13.235.244.119 << EOF
+                            cd $REMOTE_PATH
+
+                            # Deploy the application using Docker Compose
+                            docker-compose -f docker-compose.yaml pull
+                            docker-compose -f docker-compose.yaml up -d
+                            EOF
+                        '''
+                    }
+                }
+            }
         }
     }
-   }
-  }  
- }
-}   
+}
