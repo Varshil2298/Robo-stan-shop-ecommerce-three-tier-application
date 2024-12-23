@@ -23,21 +23,30 @@ pipeline {
                branch 'feature/*'
             }
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ec2-creds']]) {
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ec2-creds']]) {
+        sshagent(['aws-dev-deploy-ec2-instance']) {
+            sh ''' 
+                REMOTE_PATH=/home/ubuntu/robo-stan-shop-ecommerce-three-tier-application
+                BRANCH_NAME=feature/test
 
-                    sshagent(['aws-dev-deploy-ec2-instance']) {
-                        sh ''' 
-                             REMOTE_PATH=/home/ubuntu/robo-stan-shop-ecommerce-three-tier-application
+                ssh -o StrictHostKeyChecking=no ubuntu@43.205.213.221 << EOF
+                if [ ! -d "$REMOTE_PATH" ]; then
+                    git clone -b $BRANCH_NAME https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git $REMOTE_PATH
+                else
+                    cd $REMOTE_PATH
+                    git fetch origin
+                    git checkout $BRANCH_NAME
+                    git pull origin $BRANCH_NAME
+                fi
 
-                            ssh -o StrictHostKeyChecking=no ubuntu@43.205.213.221 << EOF
-                            cd $REMOTE_PATH
-                            docker-compose -f docker-compose.yaml pull
-                            docker-compose -f docker-compose.yaml up -d               
-                            EOF
-                        '''
+                cd $REMOTE_PATH
+                docker-compose -f docker-compose.yaml pull
+                docker-compose -f docker-compose.yaml up -d               
+                EOF
+            '''
         }
-    }    
-  }  
-  }
+      }
+    }
+   }
  }
-}   
+}
