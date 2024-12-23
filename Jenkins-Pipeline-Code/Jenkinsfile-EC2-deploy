@@ -29,7 +29,7 @@ pipeline {
                         sh ''' 
                              REMOTE_PATH=/home/ubuntu/robo-stan-shop-ecommerce-three-tier-application
 
-                            ssh -o StrictHostKeyChecking=no ubuntu@13.235.244.186 << EOF
+                            ssh -o StrictHostKeyChecking=no ubuntu@43.205.213.221 << EOF
                             cd $REMOTE_PATH
                             docker-compose -f docker-compose.yaml pull
                             docker-compose -f docker-compose.yaml up -d               
