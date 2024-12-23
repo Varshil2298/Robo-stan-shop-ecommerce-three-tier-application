@@ -26,22 +26,19 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ec2-creds']]) {
 
                     sshagent(['aws-dev-deploy-ec2-instance']) {
-                        sh '''                
-                            LOCAL_PATH=$WORKSPACE
-                            REMOTE_PATH=/home/ubuntu/app
-               
-                           scp -o StrictHostKeyChecking=no -r $LOCAL_PATH/* ubuntu@13.235.244.119:$REMOTE_PATH/
-                           ssh -o StrictHostKeyChecking=no ubuntu@13.235.244.119 << EOF
-                           cd $REMOTE_PATH
+                        sh ''' 
+                             REMOTE_PATH=/home/ubuntu/robo-stan-shop-ecommerce-three-tier-application
 
-                           # Deploy the application using the docker-compose.yaml file
-                           docker-compose -f docker-compose.yaml pull
-                           docker-compose -f docker-compose.yaml up -d
+                            ssh -o StrictHostKeyChecking=no ubuntu@13.235.244.186 << EOF
+                            cd $REMOTE_PATH
+                            docker-compose -f docker-compose.yaml pull
+                            docker-compose -f docker-compose.yaml up -d               
+   
                         EOF
                     '''
         }
-    }
-   }
+    }    
   }  
  }
-}   
+}
+   
