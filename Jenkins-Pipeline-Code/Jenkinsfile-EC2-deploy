@@ -29,7 +29,7 @@ pipeline {
                 REMOTE_PATH=/home/ubuntu/robo-stan-shop-ecommerce-three-tier-application
                 BRANCH_NAME=feature/test
 
-                ssh -o StrictHostKeyChecking=no ubuntu@52.66.41.106 << EOF
+                ssh -o StrictHostKeyChecking=no ubuntu@43.205.217.146 << EOF
                 if [ ! -d "$REMOTE_PATH" ]; then
                     git clone -b $BRANCH_NAME https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git $REMOTE_PATH
                 else
