@@ -42,7 +42,7 @@ pipeline {
                 cd $REMOTE_PATH
                 docker-compose -f docker-compose.yaml pull
                 docker-compose -f docker-compose.yaml up -d               
-                EOF
+            EOF
             '''
         }
       }
