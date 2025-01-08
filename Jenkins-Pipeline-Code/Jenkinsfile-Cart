@@ -1,0 +1,115 @@
+pipeline {
+    agent any 
+    tools {
+        nodejs 'nodejs'
+    }
+    environment  {
+        AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
+        AWS_ECR_REPO_NAME = credentials('ECR_REPO3')
+        AWS_DEFAULT_REGION = 'ap-south-1'
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
+    }
+    stages {
+        stage('Cleaning Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
+            steps {
+                git branch: 'develop', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git'
+            }
+        }
+        // stage('Sonarqube Analysis') {
+        //     steps {
+        //         dir('vote') {
+        //             withSonarQubeEnv('sonar-server') {
+        //                 sh ''' $SCANNER_HOME/bin/sonar-scanner \
+        //                 -Dsonar.projectName=frontend \
+        //                 -Dsonar.projectKey=frontend '''
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Quality Check') {
+        //     steps {
+        //         script {
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+        //         }
+        //     }
+        // }
+        // stage('OWASP Dependency-Check Scan') {
+        //     steps {
+        //         dir('Application-Code/frontend') {
+        //             dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+        //             dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+        //         }
+        //     }
+        // }
+        // stage('Trivy File Scan') {
+        //     steps {
+        //         dir('vote') {
+        //             sh 'trivy fs . > trivyfs.txt'
+        //         }
+        //     }
+        // }
+        stage("Docker Image Build") {
+            steps {
+                script {
+                    dir('cart') {
+                            sh 'docker system prune -f'
+                            sh 'docker container prune -f'
+                            sh 'docker build -t ${AWS_ECR_REPO_NAME} .'
+                    }
+                }
+            }
+        }
+        stage("ECR Image Pushing") {
+            steps {
+                script {
+                        sh 'aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}'
+                        echo "docker tag ${AWS_ECR_REPO_NAME}${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
+                        sh 'docker tag ${AWS_ECR_REPO_NAME} ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}'
+                        sh 'docker push ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}'
+                }
+            }
+        }
+        // stage("TRIVY Image Scan") {
+        //     steps {
+        //         sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
+        //     }
+        // }
+        stage('Checkout Code') {
+            steps {
+                git branch: 'develop', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git'
+            }
+        }
+        stage('Update Helm values.yaml') {
+            environment {
+                GIT_REPO_NAME = "robo-stan-shop-ecommerce-three-tier-application"
+                GIT_USER_NAME = "Varshil2298"
+            }
+            steps {
+                dir('EKS/helm/cart') {
+                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                        sh '''
+                            git config user.email 'devopstest@gmail.com'
+                            git config user.name 'Varshil2298'
+                            git status
+                            BUILD_NUMBER=${BUILD_NUMBER}
+                            echo $BUILD_NUMBER
+                            imageTag=$(grep 'version:' values.yaml | awk '{print $2}')
+                            echo "Current catalogue service image version: $imageTag"
+                            sed -i "s|repo: .*|repo: ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}|" values.yaml
+                            echo "repo-name: $ECR_REPO_NAME"
+                            sed -i "s|version: .*|version: ${BUILD_NUMBER}|" values.yaml
+                            git add values.yaml
+                            git commit -m "Update Helm chart cart microservice image to ${BUILD_NUMBER} and repository to ${ECR_REPO_NAME}"
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:develop
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}        
