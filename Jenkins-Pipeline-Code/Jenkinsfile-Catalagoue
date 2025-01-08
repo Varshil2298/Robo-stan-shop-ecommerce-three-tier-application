@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'master', credentialsId: 'GITHUB', url: 'https://github.com/volley123/three-tier-architecture-demo.git'
+                git branch: 'develop', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git'
             }
         }
         // stage('Sonarqube Analysis') {
@@ -81,20 +81,20 @@ pipeline {
         // }
         stage('Checkout Code') {
             steps {
-                git branch: 'master', credentialsId: 'GITHUB', url: 'https://github.com/volley123/example-voting-app.git'
+                git branch: 'develop', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git'
             }
         }
         stage('Update Helm values.yaml') {
             environment {
-                GIT_REPO_NAME = "three-tier-architecture-demo"
-                GIT_USER_NAME = "volley123"
+                GIT_REPO_NAME = "robo-stan-shop-ecommerce-three-tier-application"
+                GIT_USER_NAME = "Varshil2298"
             }
             steps {
                 dir('EKS/helm/catalogue') {
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                             git config user.email 'devopstest@gmail.com'
-                            git config user.name 'volley123'
+                            git config user.name 'Varshil2298'
                             git status
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
@@ -105,7 +105,7 @@ pipeline {
                             sed -i "s|version: .*|version: ${BUILD_NUMBER}|" values.yaml
                             git add values.yaml
                             git commit -m "Update Helm chart catalogue microservice image to ${BUILD_NUMBER} and repository to ${ECR_REPO_NAME}"
-                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:master
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:develop
                         '''
                     }
                 }
