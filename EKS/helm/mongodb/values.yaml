@@ -34,7 +34,7 @@ ocCreateRoute: false
 ######################################
 mongodb:
   image:
-    repo: 415916042243.dkr.ecr.ap-south-1.amazonaws.com/roboshop-mongo
+    repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-mongodb
     version: 1
     pullPolicy: IfNotPresent
   affinity: {}
