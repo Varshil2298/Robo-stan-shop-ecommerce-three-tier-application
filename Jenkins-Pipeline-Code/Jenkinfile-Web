@@ -54,6 +54,9 @@
         //     }
         // }
         stage("Docker Image Build") {
+             when {
+                changeset "web/**"  // Run this stage only if changes are in the 'web' folder
+            }
             steps {
                 script {
                     dir('web') {
@@ -65,6 +68,9 @@
             }
         }
         stage("ECR Image Pushing") {
+            when {
+                changeset "web/**"  // Run this stage only if changes are in the 'web' folder
+            }
             steps {
                 script {
                         sh 'aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}'
@@ -85,6 +91,9 @@
             }
         }
         stage('Update Helm values.yaml') {
+            when {
+                changeset "EKS/helm/web/**" // Run this stage only if changes are in the 'EKS/helm/web' folder
+            }
             environment {
                 GIT_REPO_NAME = "robo-stan-shop-ecommerce-three-tier-application"
                 GIT_USER_NAME = "Varshil2298"
