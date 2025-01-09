@@ -44,6 +44,7 @@ spec:
                       - {{ .Values.redis.zone | quote }}
       {{- with .Values.redis.nodeSelector }}
       nodeSelector:
+        type: ondemand
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.redis.tolerations }}
