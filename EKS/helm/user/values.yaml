@@ -2,7 +2,7 @@
 # Default is docker/robotshop/image:latest
 # image:
 #   repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-app
-#   version: 4
+#   version: 7
 #   pullPolicy: IfNotPresent
 
 # EUM configuration
@@ -35,7 +35,7 @@ ocCreateRoute: false
 user:
   image:
     repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-app
-    version: 4
+    version: 7
     pullPolicy: IfNotPresent
   affinity: {}
   nodeSelector: {}
