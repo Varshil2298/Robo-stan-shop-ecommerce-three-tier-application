@@ -35,12 +35,6 @@ redis:
   nodeSelector: {}
   tolerations: []  
 
-storageClass:
-  name: gp2
-  type: gp2
-  default: true
-  reclaimPolicy: Delete
-  volumeBindingMode: WaitForFirstConsumer
 
 
 
