@@ -29,7 +29,6 @@ ocCreateRoute: false
 
 redis:
   image:
-    pullPolicy: IfNotPresent
   affinity: {}
   nodeSelector: {}
   tolerations: []  
