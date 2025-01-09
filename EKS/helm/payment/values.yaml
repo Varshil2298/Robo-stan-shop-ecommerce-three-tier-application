@@ -2,7 +2,7 @@
 # Default is docker/robotshop/image:latest
 # image:
 #   repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-payment
-#   version: 4
+#   version: 7
 #   pullPolicy: IfNotPresent
 
 # EUM configuration
@@ -35,7 +35,7 @@ ocCreateRoute: false
 payment:
   image:
     repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-payment
-    version: 4
+    version: 7
     pullPolicy: IfNotPresent
     gateway: https://www.paypal.com 
   affinity: {}
