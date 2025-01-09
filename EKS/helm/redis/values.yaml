@@ -30,17 +30,9 @@ ocCreateRoute: false
 redis:
   image:
     pullPolicy: IfNotPresent
-  zone: ap-south-1a  
   affinity: {}
   nodeSelector: {}
   tolerations: []  
-
-storageClass:
-  name: gp2
-  type: gp2
-  default: true
-  reclaimPolicy: Delete
-  volumeBindingMode: WaitForFirstConsumer
 
 
 

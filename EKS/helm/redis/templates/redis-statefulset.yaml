@@ -15,50 +15,47 @@ spec:
       labels:
         service: redis
     spec:
+      {{ if .Values.psp.enabled }}
       serviceAccountName: robot-shop
+      {{ end }}
       containers:
-        - name: redis
-          image: redis:4.0.6
-          imagePullPolicy: {{ .Values.redis.image.pullPolicy | default "IfNotPresent" }}
-          ports:
-            - containerPort: 6379
-          volumeMounts:
-            - name: data
-              mountPath: /mnt/redis
-          resources:
-            limits:
-              cpu: 200m
-              memory: 100Mi
-            requests:
-              cpu: 100m
-              memory: 50Mi
+      - name: redis
+        image: redis:4.0.6
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+          - name: data
+            mountPath: /mnt/redis
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
       restartPolicy: Always
+      {{- with .Values.redis.affinity }}
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: topology.kubernetes.io/zone
-                    operator: In
-                    values:
-                      - {{ .Values.redis.zone | quote }}
-      {{- if .Values.redis.nodeSelector }}
-      nodeSelector:
-        {{- toYaml .Values.redis.nodeSelector | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.redis.tolerations }}
+      {{- with .Values.redis.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.tolerations }}
       tolerations:
-        {{- toYaml .Values.redis.tolerations | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
-        accessModes: ["ReadWriteOnce"]
-        {{- if not .Values.openshift }}
+        accessModes: [ "ReadWriteOnce" ]
+        {{ if not .Values.openshift }}
         storageClassName: gp2
         volumeMode: Filesystem
-        {{- end }}
+        {{ end }}
         resources:
           requests:
             storage: 1Gi
