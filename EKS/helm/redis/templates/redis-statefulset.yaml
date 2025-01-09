@@ -15,7 +15,9 @@ spec:
       labels:
         service: redis
     spec:
+      {{ if .Values.psp.enabled }}
       serviceAccountName: robot-shop
+      {{ end }}
       containers:
       - name: redis
         image: redis:4.0.6
@@ -33,15 +35,10 @@ spec:
             cpu: 100m
             memory: 50Mi
       restartPolicy: Always
+      {{- with .Values.redis.affinity }}
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: topology.kubernetes.io/zone
-                    operator: In
-                    values:
-                      - {{ .Values.redis.zone | quote }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.redis.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -61,4 +58,4 @@ spec:
         {{ end }}
         resources:
           requests:
-            storage: 1Gi
+            storage: 1Gi     

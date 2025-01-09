@@ -30,7 +30,6 @@ ocCreateRoute: false
 redis:
   image:
     pullPolicy: IfNotPresent
-  zone: ap-south-1a  
   affinity: {}
   nodeSelector: {}
   tolerations: []  
