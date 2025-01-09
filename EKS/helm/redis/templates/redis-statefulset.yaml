@@ -17,21 +17,21 @@ spec:
     spec:
       serviceAccountName: robot-shop
       containers:
-      - name: redis
-        image: redis:4.0.6
-        imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
-        ports:
-        - containerPort: 6379
-        volumeMounts:
-          - name: data
-            mountPath: /mnt/redis
-        resources:
-          limits:
-            cpu: 200m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 50Mi
+        - name: redis
+          image: redis:4.0.6
+          imagePullPolicy: {{ .Values.redis.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /mnt/redis
+          resources:
+            limits:
+              cpu: 200m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 50Mi
       restartPolicy: Always
       affinity:
         nodeAffinity:
@@ -42,24 +42,23 @@ spec:
                     operator: In
                     values:
                       - {{ .Values.redis.zone | quote }}
-      {{- with .Values.redis.nodeSelector }}
+      {{- if .Values.redis.nodeSelector }}
       nodeSelector:
-        type: ondemand
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml .Values.redis.nodeSelector | nindent 8 }}
       {{- end }}
-      {{- with .Values.redis.tolerations }}
+      {{- if .Values.redis.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml .Values.redis.tolerations | nindent 8 }}
       {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
-        accessModes: [ "ReadWriteOnce" ]
-        {{ if not .Values.openshift }}
+        accessModes: ["ReadWriteOnce"]
+        {{- if not .Values.openshift }}
         storageClassName: gp2
         volumeMode: Filesystem
-        {{ end }}
+        {{- end }}
         resources:
           requests:
             storage: 1Gi
