@@ -30,7 +30,7 @@ ocCreateRoute: false
 catalogue:
   image:
     repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/catalouge-app
-    version: 10
+    version: 9
     pullPolicy: IfNotPresent
   affinity: {}
   nodeSelector: {}
