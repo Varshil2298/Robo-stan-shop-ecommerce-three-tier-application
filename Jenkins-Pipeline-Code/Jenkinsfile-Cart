@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Sonarqube Analysis') {
             steps {
-                dir('vote') {
+                dir('cart') {
                     withSonarQubeEnv('sonar-server') {
                         sh ''' $SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectName=roboapp-cart-project \
