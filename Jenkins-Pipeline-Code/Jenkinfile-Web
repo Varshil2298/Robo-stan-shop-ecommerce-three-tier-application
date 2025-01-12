@@ -65,7 +65,7 @@
                     trivy image ${AWS_ECR_REPO_NAME} \
                     --severity HIGH,CRITICAL \
                     --exit-code 1 \
-                    -- quiet \
+                    --quiet \
                     --format json -o trivy-image-CRITICAL-results.json
                     '''
                 }
