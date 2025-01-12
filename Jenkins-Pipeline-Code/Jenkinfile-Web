@@ -47,13 +47,6 @@
         //         }
         //     }
         // }
-        // stage('Trivy File Scan') {
-        //     steps {
-        //         dir('vote') {
-        //             sh 'trivy fs . > trivyfs.txt'
-        //         }
-        //     }
-        // }
         stage("Docker Image Build") {
             steps {
                 script {
@@ -62,6 +55,18 @@
                             sh 'docker container prune -f'
                             sh 'docker build -t ${AWS_ECR_REPO_NAME} .'
                     }
+                }
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    sh '''
+                    trivy image ${AWS_ECR_REPO_NAME} \
+                    --severity HIGH,CRITICAL \
+                    --exit-code 1 \
+                    --format json -o trivy-image-CRITICAL-results.json
+                    '''
                 }
             }
         }
@@ -113,4 +118,16 @@
             }
         }
     }
-} 
+
+post {
+    always {
+        junit allowEmptyResults: true, stdioRetention: '', testResults: 'test-results.xml'
+
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+
+        // **Publish Trivy Scan Report**
+        sh 'trivy convert --format template --template /usr/local/share/trivy/templates/html.tpl --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json'
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "./", reportFiles: "trivy-image-CRITICAL-results.html", reportName: "Trivy Image Critical Vul Report", reportTitles: "", useWrapperFileDirectly: true])
+    }
+}
+     }
