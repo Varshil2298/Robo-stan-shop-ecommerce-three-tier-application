@@ -63,7 +63,7 @@
                 script {
                     sh '''
                     trivy image ${AWS_ECR_REPO_NAME} \
-                    --severity HIGH,CRITICAL \
+                    --severity HIGH,CRITICAL,MEDIUM \
                     --exit-code 1 \
                     --quiet \
                     --format json -o trivy-image-CRITICAL-results.json
@@ -144,19 +144,19 @@ post {
             reportName: 'Trivy Image Critical Vul Report'
             ])
 
-            // Additional steps from the screenshot
-            junit allowEmptyResults: true, testResults: 'test-results.xml'
-            junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
+        //     // Additional steps from the screenshot
+        //     junit allowEmptyResults: true, testResults: 'test-results.xml'
+        //     junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
 
-        publishHTML(target: [
-            allowMissing: true,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: './',
-            reportFiles: 'dependency-check-jenkins.html',
-            reportName: 'Dependency Check HTML Report',
-            useWrapperFileDirectly: true
-            ])
+        // publishHTML(target: [
+        //     allowMissing: true,
+        //     alwaysLinkToLastBuild: true,
+        //     keepAll: true,
+        //     reportDir: './',
+        //     reportFiles: 'dependency-check-jenkins.html',
+        //     reportName: 'Dependency Check HTML Report',
+        //     useWrapperFileDirectly: true
+        //     ])
         }
     }
 }
