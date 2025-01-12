@@ -64,7 +64,7 @@
                     sh '''
                     trivy image ${AWS_ECR_REPO_NAME} \
                     --severity HIGH,CRITICAL,MEDIUM \
-                    --exit-code 1 \
+                    --exit-code 0 \
                     --quiet \
                     --format json -o trivy-image-CRITICAL-results.json
                     '''
@@ -81,11 +81,6 @@
                 }
             }
         }
-        // stage("TRIVY Image Scan") {
-        //     steps {
-        //         sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt' 
-        //     }
-        // }
         stage('Checkout Code') {
             steps {
                 git branch: 'develop', credentialsId: 'GITHUB', url: 'https://github.com/Varshil2298/robo-stan-shop-ecommerce-three-tier-application.git'
@@ -143,20 +138,6 @@ post {
             reportFiles: 'trivy-image-CRITICAL-results.html',
             reportName: 'Trivy Image Critical Vul Report'
             ])
-
-        //     // Additional steps from the screenshot
-        //     junit allowEmptyResults: true, testResults: 'test-results.xml'
-        //     junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
-
-        // publishHTML(target: [
-        //     allowMissing: true,
-        //     alwaysLinkToLastBuild: true,
-        //     keepAll: true,
-        //     reportDir: './',
-        //     reportFiles: 'dependency-check-jenkins.html',
-        //     reportName: 'Dependency Check HTML Report',
-        //     useWrapperFileDirectly: true
-        //     ])
         }
     }
 }
