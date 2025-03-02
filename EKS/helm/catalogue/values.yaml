@@ -29,8 +29,8 @@ ocCreateRoute: false
 
 catalogue:
   image:
-    repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/catalouge-app
-    version: 11
+    repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-catalouge
+    version: 4
     pullPolicy: IfNotPresent
   affinity: {}
   nodeSelector: {}
