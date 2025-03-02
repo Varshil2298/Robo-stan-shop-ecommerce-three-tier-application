@@ -1,7 +1,7 @@
 # Registry and repository for Docker images
 # Default is docker/robotshop/image:latest
 # image:
-#   repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-app
+#   repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-user
 #   version: 11
 #   pullPolicy: IfNotPresent
 
@@ -34,7 +34,7 @@ ocCreateRoute: false
 ######################################
 user:
   image:
-    repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-app
+    repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-user
     version: 11
     pullPolicy: IfNotPresent
   affinity: {}
