@@ -63,7 +63,7 @@
                 script {
                     sh '''
                     trivy image ${AWS_ECR_REPO_NAME} \
-                    --severity HIGH,CRITICAL,MEDIUM \
+                    --severity CRITICAL \
                     --exit-code 0 \
                     --quiet \
                     --format json -o trivy-image-CRITICAL-results.json
