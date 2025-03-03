@@ -9,7 +9,8 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
-    - http:
+    - host: varshildesai.shop
+      http:
         paths:
           - path: /
             pathType: Prefix
