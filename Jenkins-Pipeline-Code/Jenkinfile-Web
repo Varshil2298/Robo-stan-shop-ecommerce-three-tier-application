@@ -136,7 +136,7 @@ post {
             keepAll: true,
             reportDir: './',
             reportFiles: 'trivy-image-CRITICAL-results.html',
-            reportName: 'Trivy Image Critical Vul Report'
+            reportName: 'Trivy Image Severity Vul Report'
             ])
         }
     }
