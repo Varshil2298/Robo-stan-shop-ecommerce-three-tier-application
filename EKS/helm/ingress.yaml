@@ -10,6 +10,8 @@ metadata:
     ## SSL Settings
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:423966983147:certificate/9e8fbdb7-76b3-4470-b3bc-b48866a7ec05
+    # SSL Redirect Setting
+    alb.ingress.kubernetes.io/ssl-redirect: '443'   
 spec:
   rules:
     - host: www.varshildesai.shop
