@@ -44,7 +44,7 @@ spec:
           - name: DB_PORT
             value: "3306"            
           - name: DB_NAME
-            value: "robotstan"            
+            value: "roboshopdb"            
           - name: DB_USERNAME
             value: "dbadmin"          
           - name: DB_PASSWORD
