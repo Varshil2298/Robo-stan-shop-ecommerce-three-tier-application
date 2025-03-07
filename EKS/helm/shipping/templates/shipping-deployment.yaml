@@ -30,28 +30,28 @@ spec:
           requests:
             cpu: 100m
             memory: 500Mi
-        # readinessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: 8080
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 5
-        #   failureThreshold: 30
-        #   successThreshold: 1
-        # env:
-        #   - name: DB_HOSTNAME
-        #     value: "mysql"            
-        #   - name: DB_PORT
-        #     value: "3306"            
-        #   - name: DB_NAME
-        #     value: "robotstan"            
-        #   - name: DB_USERNAME
-        #     value: "dbadmin"        # RDS DB Username is dbadmin     
-        #   - name: DB_PASSWORD
-        #     valueFrom:
-        #       secretKeyRef:
-        #         name: mysql-db-password
-        #         key: db-password   
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          failureThreshold: 30
+          successThreshold: 1
+        env:
+          - name: DB_HOSTNAME
+            value: "mysql"            
+          - name: DB_PORT
+            value: "3306"            
+          - name: DB_NAME
+            value: "robotstan"            
+          - name: DB_USERNAME
+            value: "dbadmin"        # RDS DB Username is dbadmin     
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-db-password
+                key: db-password   
       restartPolicy: Always
       {{- with .Values.shipping.affinity }}
       affinity:
