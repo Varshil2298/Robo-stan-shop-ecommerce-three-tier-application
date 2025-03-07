@@ -2,7 +2,7 @@
 # Default is docker/robotshop/image:latest
 # image:
 #   repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-shipping
-#   version: 6
+#   version: 7
 #   pullPolicy: IfNotPresent
 
 # EUM configuration
@@ -35,7 +35,7 @@ ocCreateRoute: false
 shipping:
   image:
     repo: 423966983147.dkr.ecr.ap-south-1.amazonaws.com/roboshop-shipping
-    version: 6
+    version: 7
     pullPolicy: IfNotPresent
   mysql:
     externalName: "roboshopdb.casxjchsp3cu.ap-south-1.rds.amazonaws.com"  
