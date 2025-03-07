@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping-mysql  # Custom service name for cart
+  labels:
+    app: shipping
+spec:
+  type: ExternalName
+  externalName: {{ .Values.shipping.mysql.externalName }}
