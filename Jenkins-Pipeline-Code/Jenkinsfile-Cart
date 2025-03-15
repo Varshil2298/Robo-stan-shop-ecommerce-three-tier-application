@@ -3,7 +3,7 @@ def slacknotificationmethod(String buildStatus = 'STARTED') {
 
  def color 
 
- if (buildStatus == 'STARTED') {
+ if (buildStatus == 'SUCCESS') {
   color = '#47ec05'
   } else if (buildStatus == 'UNSTABLE') {
   color = '#d5ee0d'
@@ -80,7 +80,7 @@ pipeline {
                             sh 'docker system prune -f'
                             sh 'docker container prune -f'
                             sh 'docker build -t ${AWS_ECR_REPO_NAME} .'
-                            sh 'exit 1'
+                        //    sh 'exit 1'
                     }
                 }
             }
