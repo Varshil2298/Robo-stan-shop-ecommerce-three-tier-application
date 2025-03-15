@@ -157,13 +157,10 @@ post {
             reportFiles: 'trivy-image-CRITICAL-results.html',
             reportName: 'Trivy Image Severity Vul Report'
             ])
-        }
+
+            // Send Slack notification
+        slacknotificationmethod("${currentBuild.result}")    
     }
-
-
-post {
-    always {
-        slacknotificationmethod("${currentBuild.result}")
-    }    
 }
+
 }
