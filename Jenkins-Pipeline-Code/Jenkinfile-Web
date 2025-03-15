@@ -145,8 +145,6 @@ post {
         --output trivy-image-CRITICAL-results.xml trivy-image-CRITICAL-results.json
         '''
 
-        slackNotificationMethod("${currentBuild.result}")
-
         // Publish Trivy JUnit test results
         junit allowEmptyResults: true, testResults: 'trivy-image-CRITICAL-results.xml'
 
@@ -161,4 +159,11 @@ post {
             ])
         }
     }
+
+
+post {
+    always {
+        slacknotificationmethod("${currentBuild.result}")
+    }    
+}
 }
