@@ -136,7 +136,7 @@ def slacknotificationmethod(String buildStatus = 'STARTED') {
 
 post {
     always {
-        slackNotificationMethod("${currentBuild.result}")
+    //    slackNotificationMethod("${currentBuild.result}")
             // Convert to HTML and JUnit reports for critical vulnerabilities
         sh '''
         trivy convert --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
