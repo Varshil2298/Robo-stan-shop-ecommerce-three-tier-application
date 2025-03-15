@@ -136,7 +136,6 @@ def slacknotificationmethod(String buildStatus = 'STARTED') {
 
 post {
     always {
-    //    slackNotificationMethod("${currentBuild.result}")
             // Convert to HTML and JUnit reports for critical vulnerabilities
         sh '''
         trivy convert --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
@@ -145,6 +144,8 @@ post {
         trivy convert --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
         --output trivy-image-CRITICAL-results.xml trivy-image-CRITICAL-results.json
         '''
+
+        slackNotificationMethod("${currentBuild.result}")
 
         // Publish Trivy JUnit test results
         junit allowEmptyResults: true, testResults: 'trivy-image-CRITICAL-results.xml'
